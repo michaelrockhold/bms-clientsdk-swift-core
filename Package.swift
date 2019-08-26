@@ -22,8 +22,22 @@ let package = Package(
             name: "BMSCore",
             path: "Source",
             sources: [
-            	"BMSClient.swift", "Error.swift"
-            	
+            	"BMSClient.swift",
+            	"Error.swift",
+            	"Network Requests/BMSURLSession.swift",
+            	"Network Requests/BMSURLSessionUtility.swift",
+            	"Network Requests/Request.swift",
+            	"Network Requests/BMSURLSessionDelegate.swift",
+            	"Network Requests/NetworkMonitor.swift",
+            	"Network Requests/Response.swift",
+            	"Security/AuthorizationManager.swift",
+            	"Security/BaseAuthorizationManager.swift",
+            	"Security/Identity/AppIdentity.swift",
+            	"Security/Identity/BaseDeviceIdentity.swift",
+            	"Security/Identity/DeviceIdentity.swift",
+            	"Security/Identity/BaseAppIdentity.swift",
+            	"Security/Identity/BaseUserIdentity.swift",
+            	"Security/Identity/UserIdentity.swift"
             ],
             dependencies: []),
         .testTarget(

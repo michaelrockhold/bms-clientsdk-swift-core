@@ -20,6 +20,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages which this package depends on.
         .target(
             name: "BMSCore",
+            dependencies: [],
             path: "Source",
             sources: [
             	"BMSClient.swift",
@@ -38,8 +39,8 @@ let package = Package(
             	"Security/Identity/BaseAppIdentity.swift",
             	"Security/Identity/BaseUserIdentity.swift",
             	"Security/Identity/UserIdentity.swift"
-            ],
-            dependencies: []),
+            	]
+            ),
         .testTarget(
             name: "BMSCoreTests",
             dependencies: ["BMSCore"]),

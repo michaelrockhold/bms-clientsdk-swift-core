@@ -8,8 +8,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
-            name: "bms-clientsdk-swift-core",
-            targets: ["bms-clientsdk-swift-core"]),
+            name: "BMSCore",
+            targets: ["BMSCore"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -39,10 +39,21 @@ let package = Package(
             	"Security/Identity/BaseAppIdentity.swift",
             	"Security/Identity/BaseUserIdentity.swift",
             	"Security/Identity/UserIdentity.swift"
-            	]
+            ]
             ),
         .testTarget(
             name: "BMSCoreTests",
-            dependencies: ["BMSCore"]),
+            dependencies: ["BMSCore"],
+            path: "Tests/Unit Tests",
+            sources: [
+            	"BMSClientTests.swift",
+            	"NetworkDetectionTests.swift",
+            	"BMSURLSessionUtilityTests.swift",
+            	"RequestTests.swift",
+            	"BMSUrlSessionDelegateTests.swift",
+            	"BMSUrlSessionTests.swift",
+            	"ResponseTests.swift"
+            ]
+            ),
     ]
 )

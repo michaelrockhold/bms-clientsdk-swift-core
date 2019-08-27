@@ -12,6 +12,7 @@
 */
 
 
+import Foundation
 import SystemConfiguration
 import CoreTelephony
 

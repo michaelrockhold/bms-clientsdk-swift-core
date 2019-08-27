@@ -12,6 +12,7 @@
 */
 
 
+import Foundation
 
 // MARK: - Swift 3
 

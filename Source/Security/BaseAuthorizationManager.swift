@@ -12,6 +12,7 @@
 */
 
 
+import Foundation
 
 internal class BaseAuthorizationManager : AuthorizationManager {
     

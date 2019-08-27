@@ -11,6 +11,8 @@
 *     limitations under the License.
 */
 
+import Foundation
+
 #if !os(iOS)
 import WatchKit
 #endif

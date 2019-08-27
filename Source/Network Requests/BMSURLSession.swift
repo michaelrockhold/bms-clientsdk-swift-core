@@ -11,7 +11,7 @@
 *     limitations under the License.
 */
 
-
+import Foundation
 import BMSAnalyticsAPI
 
 // MARK: - Swift 3

@@ -12,12 +12,7 @@
 */
 
 
-
-// MARK: - Swift 3
-
-#if swift(>=3.0)
-    
-    
+import Foundation
     
 /**
     Indicates a failure that occurred within the BMSCore framework.
@@ -36,40 +31,3 @@ public enum BMSCoreError: Error {
     
     static let domain = "com.ibm.mobilefirstplatform.clientsdk.swift.bmscore"
 }
-    
-    
-    
-    
-    
-/**************************************************************************************************/
-    
-    
-    
-    
-    
-// MARK: - Swift 2
-    
-#else
-    
-    
-    
-/**
-    Indicates a failure that occurred within the BMSCore framework.
-*/
-public enum BMSCoreError: Int, ErrorType {
-    
-    
-    /// The URL provided in the `Request` initializer is invalid.
-    case malformedUrl
-    
-    /// Need to call the `BMSClient.initialize(bluemixAppRoute:bluemixAppGUID:bluemixRegion:)` method.
-    case clientNotInitialized
-    
-    /// The network request failed due to a 4xx or 5xx status code.
-    case serverRespondedWithError
-    
-    static let domain = "com.ibm.mobilefirstplatform.clientsdk.swift.bmscore"
-}
-
-
-#endif

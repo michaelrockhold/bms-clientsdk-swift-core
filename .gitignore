@@ -3,3 +3,5 @@ Build/
 xcuserdata/
 DerivedData/
 Carthage/
+.build/
+Package.resolved

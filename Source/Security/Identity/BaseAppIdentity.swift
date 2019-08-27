@@ -12,12 +12,8 @@
 */
 
 
+import Foundation
 
-// MARK: - Swift 3
-
-#if swift(>=3.0)
-
-    
 
 // This class represents the base app identity class, with default methods and keys
 open class BaseAppIdentity: AppIdentity {
@@ -64,64 +60,3 @@ open class BaseAppIdentity: AppIdentity {
     }
     
 }
-    
-    
-    
-    
-    
-/**************************************************************************************************/
-    
-    
-    
-    
-    
-// MARK: - Swift 2
-    
-#else
-    
-    
-    
-// This class represents the base app identity class, with default methods and keys
-public class BaseAppIdentity: AppIdentity {
-
-    
-    public struct Key {
-        
-        public static let ID = "id"
-        public static let version = "version"
-    }
-    
-    
-    public internal(set) var jsonData: [String:String] = ([:])
-    
-	public var ID: String? {
-		get {
-			return jsonData[BaseAppIdentity.Key.ID]
-		}
-	}
-	public var version: String? {
-		get {
-			return jsonData[BaseAppIdentity.Key.version]
-		}
-	}
-	
-	public init() {
-        
-        jsonData[BaseAppIdentity.Key.ID] = NSBundle.mainBundle().bundleIdentifier
-        jsonData[BaseAppIdentity.Key.version] = NSBundle.mainBundle().infoDictionary?["CFBundleShortVersionString"] as? String
-	}
-	
-    public init(map: [String:AnyObject]?) {
-        guard let json = map as? [String:String] else {
-            jsonData = ([:])
-            return
-        }
-
-        jsonData = json
-    }
-    
-}
-
-
-    
-#endif

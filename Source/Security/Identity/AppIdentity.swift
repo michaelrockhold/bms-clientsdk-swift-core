@@ -12,7 +12,6 @@
 */
 
 
-
 public protocol AppIdentity {
     
 	var ID: String? { get }

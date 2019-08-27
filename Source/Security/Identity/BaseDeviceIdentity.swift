@@ -12,17 +12,12 @@
 */
 
 import Foundation
+import UIKit
 
 #if !os(iOS)
 import WatchKit
 #endif
 
-
-// MARK: - Swift 3
-
-#if swift(>=3.0)
-
-    
 
 // This class represents the base device identity class, with default methods and keys
 open class BaseDeviceIdentity: DeviceIdentity {
@@ -97,90 +92,3 @@ open class BaseDeviceIdentity: DeviceIdentity {
 
 }
     
-    
-    
-    
-    
-/**************************************************************************************************/
-    
-    
-    
-    
-    
-// MARK: - Swift 2
-    
-#else
-    
-    
-    
-// This class represents the base device identity class, with default methods and keys
-public class BaseDeviceIdentity: DeviceIdentity {
-    
-    
-    public struct Key {
-        
-        public static let ID = "id"
-        public static let OS = "platform"
-        public static let OSVersion = "osVersion"
-        public static let model = "model"
-    }
-    
-    
-    public internal(set) var jsonData: [String:String] = ([:])
-    
-    public var ID: String? {
-        get {
-            return jsonData[BaseDeviceIdentity.Key.ID]
-        }
-    }
-    
-    public var OS: String? {
-        get {
-            return jsonData[BaseDeviceIdentity.Key.OS]
-        }
-    }
-    
-    
-    public var OSVersion: String? {
-        get {
-            return jsonData[BaseDeviceIdentity.Key.OSVersion]
-        }
-    }
-    
-    
-    public var model: String? {
-        get {
-            return jsonData[BaseDeviceIdentity.Key.model]
-        }
-    }
-    
-    
-    public init() {
-    
-        #if os(watchOS)
-            jsonData[BaseDeviceIdentity.Key.ID] = "Not Available"
-            jsonData[BaseDeviceIdentity.Key.OS] =  WKInterfaceDevice.currentDevice().systemName
-            jsonData[BaseDeviceIdentity.Key.OSVersion] = WKInterfaceDevice.currentDevice().systemVersion
-            jsonData[BaseDeviceIdentity.Key.model] =  WKInterfaceDevice.currentDevice().model
-        #else
-            jsonData[BaseDeviceIdentity.Key.ID] = UIDevice.currentDevice().identifierForVendor?.UUIDString
-            jsonData[BaseDeviceIdentity.Key.OS] =  UIDevice.currentDevice().systemName
-            jsonData[BaseDeviceIdentity.Key.OSVersion] = UIDevice.currentDevice().systemVersion
-            jsonData[BaseDeviceIdentity.Key.model] =  UIDevice.currentDevice().model
-        #endif
-    }
-    
-    public init(map: [String:AnyObject]?) {
-        guard let json = map as? [String:String] else {
-            jsonData = ([:])
-            return
-        }
-        
-        jsonData = json
-    }
-    
-}
-
-
-    
-#endif

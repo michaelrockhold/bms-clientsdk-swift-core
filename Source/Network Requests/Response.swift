@@ -11,15 +11,9 @@
 *     limitations under the License.
 */
 
-
 import Foundation
 
-// MARK: - Swift 3
 
-#if swift(>=3.0)
-
-
-    
 /**
     Contains useful response data from an HTTP request made by the `Request` class.
 */
@@ -88,92 +82,3 @@ public class Response {
     }
     
 }
-    
-    
-    
-    
-    
-/**************************************************************************************************/
-    
-    
-    
-    
-    
-// MARK: - Swift 2
-    
-#else
-    
-    
-    
-/**
-    Contains useful response data from an HTTP request made by the `Request` class.
-*/
-public class Response {
-    
-    
-    // MARK: - Properties
-    
-    /// The HTTP status of the response.
-    public let statusCode: Int?
-    
-    /// HTTP headers from the response.
-    public let headers: [NSObject: AnyObject]?
-    
-    /// The body of the response.
-    /// Returns nil if there is no body or the body cannot be converted to a `String`.
-    public let responseText: String?
-    
-    /// The body of the response.
-    /// Returns nil if there is no body or if the response is not valid `NSData`.
-    public let responseData: NSData?
-    
-    /// The response is considered successful if the returned status code is in the 2xx range.
-    public let isSuccessful: Bool
-    
-    
-    
-    // MARK: - Properties (internal)
-    
-    internal let httpResponse: NSHTTPURLResponse?
-    
-    internal let isRedirect: Bool
-    
-    
-    
-    // MARK: - Initializer
-    
-    /**
-        Converts an `NSHTTPURLResponse` to a more accessible `Response` object.
-
-        - parameter responseData: Data returned from the server.
-        - parameter httpResponse: Response object returned from the `NSURLSession` request.
-        - parameter isRedirect:   True if the response requires a redirect.
-    */
-    public init(responseData: NSData?, httpResponse: NSHTTPURLResponse?, isRedirect: Bool) {
-    
-        self.isRedirect = isRedirect
-        self.httpResponse = httpResponse
-        self.headers = httpResponse?.allHeaderFields
-        self.statusCode = httpResponse?.statusCode
-        
-        self.responseData = responseData
-        if responseData != nil, let responseAsNSString = NSString(data: responseData!, encoding: NSUTF8StringEncoding) {
-            self.responseText = String(responseAsNSString)
-        }
-        else {
-            self.responseText = nil
-        }
-        
-        if let status = statusCode {
-            isSuccessful = (200..<300 ~= status)
-        }
-        else {
-            isSuccessful = false
-        }
-    }
-    
-}
-
-
-
-#endif

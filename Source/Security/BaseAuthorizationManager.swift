@@ -11,8 +11,8 @@
 *     limitations under the License.
 */
 
-
 import Foundation
+
 
 internal class BaseAuthorizationManager : AuthorizationManager {
     

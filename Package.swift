@@ -1,4 +1,4 @@
-// swift-tools-version:3.1
+// swift-tools-version:5.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -16,11 +16,11 @@ let package = Package(
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "BMSCore",
-            targets: ["BMSCore"]),
+            targets: ["BMSCore"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-		.package(url: "https://github.com/michaelrockhold/bms-clientsdk-swift-analytics.git", .branch:("depodulate"))
+		.package(url: "https://github.com/michaelrockhold/bms-clientsdk-swift-analytics-api.git", .branch("depodulate"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -61,15 +61,15 @@ let package = Package(
             	"BMSUrlSessionTests.swift",
             	"ResponseTests.swift"
             ]
-        ),
-        .target(
-        	name: "BMSCoreDemoApp"
-        ),
-        .target(
-        	name: "BMSCoreDemoWatchApp"
-        ),
-        .target(
-        	name: "BMSCoreDemoWatchExtension"
+//        ),
+//        .target(
+//        	name: "BMSCoreDemoApp"
+//        ),
+//        .target(
+//        	name: "BMSCoreDemoWatchApp"
+//        ),
+//        .target(
+//        	name: "BMSCoreDemoWatchExtension"
         )
     ]
 )

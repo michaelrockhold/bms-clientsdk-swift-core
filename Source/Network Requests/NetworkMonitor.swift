@@ -11,6 +11,8 @@
 *     limitations under the License.
 */
 
+#if os(iOS) // that is, not watchOS
+
 import Foundation
 import SystemConfiguration
 import CoreTelephony
@@ -20,19 +22,19 @@ import CoreTelephony
     Describes how the device is currently connected to the internet.
 */
 public enum NetworkConnection {
-    
+
     /// The device has no connection to the internet.
     case noConnection
     /// The device is connected to a WiFi network.
     case WiFi
     /// The device is using cellular data (i.e. 4G, 3G, or 2G).
     case WWAN
-    
+
     /// Raw string representation of the `NetworkConnection`.
     public var description: String {
-        
+
         switch self {
-            
+
         case .noConnection:
             return "No Connection"
         case .WiFi:
@@ -47,33 +49,33 @@ public enum NetworkConnection {
 
 /**
      Use the `NetworkMonitor` class to determine the current status of the iOS device's connection to the internet.
-     
+
      To get the type of network connection currently available, use `currentNetworkConnection`. If the `currentNetworkConnection` is WWAN, you can narrow down the type further with `cellularNetworkType`, which shows whether the device is using 4G, 3G, or 2G.
-     
+
      To subscribe to network changes, call `startMonitoringNetworkChanges()` and add an observer to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName` as the notification name. To turn off these notifications, call `stopMonitoringNetworkChanges()`.
 */
 public class NetworkMonitor {
-    
-    
+
+
     // MARK: - Constants
-    
+
     /// When using the `startMonitoringNetworkChanges()` method, register an observer with `NotificationCenter` using this `Notification.Name`.
     public static let networkChangedNotificationName = Notification.Name("NetworkChangedNotification")
-    
-    
-    
+
+
+
     // MARK: - Properties
-    
+
     /// The type of cellular data network available to the iOS device.
     /// The possible values are `4G`, `3G`, `2G`, and `unknown`.
     public var cellularNetworkType: String? {
-        
+
         guard let radioAccessTechnology = CTTelephonyNetworkInfo().currentRadioAccessTechnology else {
             return nil
         }
-        
+
         switch radioAccessTechnology {
-            
+
         case CTRadioAccessTechnologyLTE:
             return "4G"
         case CTRadioAccessTechnologyeHRPD,
@@ -92,11 +94,11 @@ public class NetworkMonitor {
             return "unknown"
         }
     }
-    
-    
+
+
     /// Detects whether the iOS device is currently connected to the internet via WiFi or WWAN, or if there is no connection.
     public var currentNetworkConnection: NetworkConnection {
-        
+
         if !reachabilityFlags.contains(.reachable) {
             return .noConnection
         }
@@ -110,56 +112,56 @@ public class NetworkMonitor {
         else if (reachabilityFlags.contains(.connectionOnDemand) || reachabilityFlags.contains(.connectionOnTraffic)) && !reachabilityFlags.contains(.interventionRequired) {
             // If the connection is on-demand or on-traffic and no user intervention is needed, then WiFi must be available
             return .WiFi
-        } 
+        }
         else {
             return .noConnection
         }
     }
-    
-    
-    
+
+
+
     // MARK: - Initializer
-    
+
     /// Creates a new instance of `NetworkMonitor` only if the current device's network can be accessed.
     public init?() {
-        
+
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
         zeroAddress.sin_family = sa_family_t(AF_INET)
-        
+
         networkReachability = withUnsafePointer(to: &zeroAddress, {
             $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
                 SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, $0)
             }
         })
-        
+
         if networkReachability == nil {
             return nil
         }
     }
-    
-    
-    
+
+
+
     // MARK: - Methods
-    
+
     /**
         Begins monitoring changes in the `currentNetworkConnection`.
-        
-        If the device's connection to the internet changes (WiFi, WWAN, or no connection), a notification will be posted to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName`. 
-     
+
+        If the device's connection to the internet changes (WiFi, WWAN, or no connection), a notification will be posted to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName`.
+
         To intercept network changes, add an observer to `NotificationCenter.default` with `NetworkMonitor.networkChangedNotificationName` as the notification name.
     */
     public func startMonitoringNetworkChanges() -> Bool {
-        
+
         guard !isMonitoringNetworkChanges else {
             return false
         }
-        
+
         var context = SCNetworkReachabilityContext()
         context.info = UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
-        
+
         guard let reachability = networkReachability, SCNetworkReachabilitySetCallback(reachability, { (target: SCNetworkReachability, flags: SCNetworkReachabilityFlags, info: UnsafeMutableRawPointer?) in
-    
+
             if let currentInfo = info {
                 let infoObject = Unmanaged<AnyObject>.fromOpaque(currentInfo).takeUnretainedValue()
                 if infoObject is NetworkMonitor {
@@ -168,19 +170,19 @@ public class NetworkMonitor {
                 }
             }
         }, &context) == true else {
-            
+
             return false
         }
-        
+
         guard SCNetworkReachabilityScheduleWithRunLoop(reachability, CFRunLoopGetCurrent(), CFRunLoopMode.defaultMode.rawValue) == true else {
             return false
         }
-        
+
         isMonitoringNetworkChanges = true
         return isMonitoringNetworkChanges
     }
-    
-    
+
+
     /**
         Stops monitoring changes in the `currentNetworkConnection` that were started by `startMonitoringNetworkChanges()`.
      */
@@ -190,36 +192,37 @@ public class NetworkMonitor {
             isMonitoringNetworkChanges = false
         }
     }
-    
-    
-    
+
+
+
     // MARK: - Internal
-    
+
     internal var isMonitoringNetworkChanges: Bool = false
-    
-    
+
+
     // This is used in `reachabilityFlags` to determine details about the current internet connection.
     private var networkReachability: SCNetworkReachability?
-    
-    
+
+
     // Contains information about the reachability of a certain network node.
     private var reachabilityFlags: SCNetworkReachabilityFlags {
-        
+
         var flags = SCNetworkReachabilityFlags(rawValue: 0)
-        
+
         if let reachability = networkReachability, withUnsafeMutablePointer(to: &flags, { SCNetworkReachabilityGetFlags(reachability, UnsafeMutablePointer($0)) }) == true {
-            
+
             return flags
         }
         else {
             return []
         }
     }
-    
-    
+
+
     deinit {
-        
+
         stopMonitoringNetworkChanges()
     }
-    
+
 }
+#endif
